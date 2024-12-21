@@ -55,148 +55,105 @@
                             <p class="job-card__location">{{ $job->location }}</p>
                             <p class="job-card__description">{{ Str::limit($job->description, 100) }}</p>
 
-                            <button class="apply-button"
+                            <button class="apply-button" data-id="{{ $job->id }}"
                                 onclick="openPopup('{{ $job->title }}', {{ $job->id }})">Apply</button>
-
                         </div>
                     @endforeach
                 </div>
             </div>
         </section>
 
-            <!-- Pop-up Apply -->
-            <div class="popup" id="applyPopup" style="display: none;">
-                <div class="popup-content">
-                    <h2>Apply for <span id="jobTitle">Job Title</span></h2>
-                    <form id="applyForm" method="POST" action="{{ route('jobs.apply') }}"
-                        enctype="multipart/form-data">
-                        @csrf
-                        <input type="hidden" id="jobsapply_id" name="jobsapply_id">
-                        <div class="form-group">
-                            <label for="applicantName">Full Name</label>
-                            <input type="text" id="applicantName" name="applicant_name"
-                                placeholder="Enter your full name" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="applicantEmail">Email</label>
-                            <input type="email" id="applicantEmail" name="applicant_email"
-                                placeholder="Enter your email address" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="cvFile">Upload CV</label>
-                            <input type="file" id="cvFile" name="cv_file" accept=".pdf,.doc,.docx" required>
-                        </div>
-                        <div class="popup-buttons">
-                            <button type="submit" class="btn-submit">Submit</button>
-                            <button type="button" class="btn-cancel" onclick="closePopup()">Cancel</button>
-                        </div>
-                    </form>
-                </div>
+        @if (session('error'))
+            <div class="alert alert-danger">
+                {{ session('error') }}
             </div>
-     
+        @endif
 
+        @if (session('success'))
+            <div class="alert alert-success">
+                {{ session('success') }}
+            </div>
+        @endif
+        <!-- Pop-up Apply -->
+        <div class="popup" id="applyPopup" style="display: none;">
+            <div class="popup-content">
+                <h2>Apply for <span id="jobTitle">Job Title</span></h2>
+                <form id="applyForm" method="POST" action="{{ route('jobs.apply') }}" enctype="multipart/form-data">
+                    @csrf
+                    <input type="hidden" id="jobsapply_id" name="jobsapply_id">
+                    <div class="form-group">
+                        <label for="applicantName">Full Name</label>
+                        <input type="text" id="applicantName" name="full_name" placeholder="Enter your full name"
+                            required>
+                    </div>
+                    <div class="form-group">
+                        <label for="applicantEmail">Email</label>
+                        <input type="email" id="applicantEmail" name="email" placeholder="Enter your email address"
+                            required>
+                    </div>
+                    <div class="form-group">
+                        <label for="cvFile">Upload CV</label>
+                        <input type="file" id="cvFile" name="cv_file" accept=".pdf,.doc,.docx" required>
+                    </div>
+                    <div class="popup-buttons">
+                        <button type="submit" class="btn-submit">Submit</button>
+                        <button type="button" class="btn-cancel" onclick="closePopup()">Cancel</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- JavaScript -->
         <script>
             // Pilih elemen DOM
             const searchInput = document.querySelector('.search-input');
-            const locationSelect = document.querySelector('.location-select');
             const searchButton = document.querySelector('.search-button');
             const jobCards = document.querySelectorAll('.job-card');
             const applyButtons = document.querySelectorAll('.apply-button');
             const popup = document.getElementById("applyPopup");
             const form = document.getElementById("applyForm");
-            const jobTitleElement = document.getElementById("jobTitle");
 
             // Fungsi pencarian
             function searchJobs() {
                 const searchText = searchInput.value.toLowerCase();
-                const selectedLocation = locationSelect?.value?.toLowerCase() || ''; // Cek jika dropdown ada
 
                 jobCards.forEach(jobCard => {
                     const jobTitle = jobCard.querySelector('.job-card__title').textContent.toLowerCase();
                     const jobCompany = jobCard.querySelector('.job-card__company').textContent.toLowerCase();
-                    const jobLocation = jobCard.querySelector('.job-card__location').textContent.toLowerCase();
 
-                    // Filter berdasarkan teks pencarian dan lokasi
                     const isTextMatch = jobTitle.includes(searchText) || jobCompany.includes(searchText);
-                    const isLocationMatch = selectedLocation === '' || jobLocation.includes(selectedLocation);
 
-                    if (isTextMatch && isLocationMatch) {
-                        jobCard.style.display = 'block'; // Tampilkan job card
-                    } else {
-                        jobCard.style.display = 'none'; // Sembunyikan job card
-                    }
+                    jobCard.style.display = isTextMatch ? 'block' : 'none';
                 });
             }
 
-            // Event listener untuk tombol pencarian
-            searchButton.addEventListener('click', () => {
-                searchJobs();
-            });
-
-            // Event listener untuk saat mengetik di input pencarian
-            searchInput.addEventListener('input', () => {
-                searchJobs();
-            });
-
-            // Event listener untuk perubahan dropdown lokasi (jika digunakan)
-            if (locationSelect) {
-                locationSelect.addEventListener('change', () => {
-                    searchJobs();
-                });
-            }
-
-            // Fungsi animasi hover pada job card
-            jobCards.forEach(jobCard => {
-                jobCard.addEventListener('mouseover', () => {
-                    jobCard.style.transform = 'scale(1.03)'; // Memperbesar kartu saat hover
-                });
-
-                jobCard.addEventListener('mouseout', () => {
-                    jobCard.style.transform = 'scale(1)'; // Mengembalikan ukuran semula
-                });
-            });
+            // Event listener pencarian
+            searchButton.addEventListener('click', () => searchJobs());
+            searchInput.addEventListener('input', () => searchJobs());
 
             // Fungsi untuk membuka pop-up Lamar Sekarang
-            function openPopup(jobTitle) {
-                jobTitleElement.textContent = jobTitle; // Set job title di dalam pop-up
+            function openPopup(jobTitle, jobId) {
+                const jobTitleElement = document.getElementById("jobTitle");
+                const jobIdInput = document.getElementById("jobsapply_id");
+
+                jobTitleElement.textContent = jobTitle; // Set judul pekerjaan
+                jobIdInput.value = jobId; // Set ID pekerjaan
                 popup.style.display = "flex"; // Tampilkan pop-up
             }
 
-            // Fungsi untuk menutup pop-up Lamar Sekarang
+            // Fungsi untuk menutup pop-up
             function closePopup() {
-                popup.style.display = "none"; // Sembunyikan pop-up
+                popup.style.display = "none";
             }
 
             // Tambahkan event listener untuk tombol Apply
             applyButtons.forEach(button => {
                 button.addEventListener('click', () => {
-                    const jobTitle = button.closest('.job-card').querySelector('.job-card__title').textContent;
-                    openPopup(jobTitle);
+                    const jobCard = button.closest('.job-card');
+                    const jobTitle = jobCard.querySelector('.job-card__title').textContent;
+                    const jobId = button.getAttribute('data-id');
+                    openPopup(jobTitle, jobId);
                 });
-            });
-
-            // Fungsi untuk menangani pengiriman form Apply
-            form.addEventListener('submit', (event) => {
-                event.preventDefault(); // Mencegah pengiriman default
-
-                const formData = new FormData(form);
-
-                fetch(form.getAttribute("action"), {
-                        method: "POST",
-                        body: formData
-                    })
-                    .then(response => {
-                        if (response.ok) {
-                            alert("Lamaran Anda berhasil dikirim!");
-                            closePopup();
-                        } else {
-                            alert("Terjadi kesalahan, coba lagi.");
-                        }
-                    })
-                    .catch(error => {
-                        console.error("Error:", error);
-                        alert("Terjadi kesalahan, coba lagi.");
-                    });
             });
         </script>
     </body>

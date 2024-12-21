@@ -65,6 +65,8 @@ Route::middleware(['auth', CheckUserStatus::class])->group(function () {
     Route::post('/events', [EventsController::class, 'storeEvent'])->name('events.store');
     Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 
+    // New route for viewing CVs
+    Route::get('/view-cv/{id}', [FindjobsController::class, 'viewCV'])->name('view.cv');
     // Route::get('/selectSkill', [FormController::class, 'showForm'])->name('form');
 
     //API ROUTE
@@ -82,3 +84,10 @@ Route::middleware(['auth'])->group(function () {
 });
 
 Route::get('/test', [UserController::class, 'test']);
+
+Route::get('/test-storage', function() {
+    $path = storage_path('app/public/test.txt');
+    File::put($path, 'Hello World');
+    return 'File uji dibuat. Cek di: ' . asset('storage/test.txt');
+});
+

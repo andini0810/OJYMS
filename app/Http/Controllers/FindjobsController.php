@@ -15,27 +15,27 @@ class FindjobsController extends Controller
     public function showFindjobs()
     {
         $jobs_creates = JobsCreate::orderBy('posted_date', 'desc')->get();
-        
+
         return view('findjobs', compact('jobs_creates'));
     }
 
     public function showJobs()
-{
-    // Ambil jobs yang dibuat oleh user yang sedang login
-    $jobs_creates = JobsCreate::where('user_id', auth()->id())->get();
+    {
+        // Ambil jobs yang dibuat oleh user yang sedang login
+        $jobs_creates = JobsCreate::where('user_id', auth()->id())->get();
 
-    return view('jobscreate', compact('jobs_creates'));
-}
+        return view('jobscreate', compact('jobs_creates'));
+    }
 
     public function createJobs()
     {
-        return view('jobscreate'); 
+        return view('jobscreate');
     }
 
     // Store a new job
     public function storeJob(Request $request)
     {
-        
+
         $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'required|string',
@@ -49,36 +49,65 @@ class FindjobsController extends Controller
         JobsCreate::create([
             'title' => $request->input('title'),
             'description' => $request->input('description'),
-            'company' => $request->input ('company'),
-            'location' => $request->input ('location'),
+            'company' => $request->input('company'),
+            'location' => $request->input('location'),
             'posted_date' => $posted_date,
         ]);
 
         return redirect()->route('findjobs')->with('success', 'Job posted successfully!');
     }
 
+
     public function applyJob(Request $request)
-    {
-        dd($request->all());
+{
+    try {
         $request->validate([
             'jobsapply_id' => 'required|exists:jobs_creates,id',
             'full_name' => 'required|string|max:255',
             'email' => 'required|email',
-            'cv_file' => 'required|file|mimes:pdf,doc,docx|max:2048',
+            'cv_file' => 'required|file|mimes:pdf|max:2048',
         ]);
 
-        $cvPath = $request->file('cv_file')->store('cv_files', 'public');
+        if ($request->hasFile('cv_file')) {
+            $file = $request->file('cv_file');
+            
+            // Check if file is valid
+            if (!$file->isValid()) {
+                Log::error('Invalid file upload attempt');
+                return redirect()->back()->with('error', 'Invalid file upload.');
+            }
 
-        JobsApply::create([
-            'jobsapply_id' => $request->jobsapply_id,
-            'full_name' => $request->full_name,
-            'email' => $request->email,
-            'cv_link' => $cvPath,
-            // 'user_id' => auth()->id(), // Add this line to associate the application with the user who applied
-        ]);
+            $fileName = time() . '_' . $file->getClientOriginalName();
+            
+            // Store file and get path
+            $filePath = $file->storeAs('cv_files', $fileName, 'public');
+            
+            if (!$filePath) {
+                Log::error('File storage failed');
+                return redirect()->back()->with('error', 'Failed to store file.');
+            }
 
-        return redirect()->route('findjobs')->with('success', 'Application submitted successfully!');
+            // Create database record
+            $jobApplication = JobsApply::create([
+                'jobsapply_id' => $request->jobsapply_id,
+                'full_name' => $request->full_name,
+                'email' => $request->email,
+                'cv_link' => $filePath,
+            ]);
+
+            if (!$jobApplication) {
+                Log::error('Failed to create database record');
+                return redirect()->back()->with('error', 'Failed to save application.');
+            }
+
+            return redirect()->route('findjobs')->with('success', 'Application submitted successfully!');
+        }
+
+        return redirect()->back()->with('error', 'No file was uploaded.');
+
+    } catch (\Exception $e) {
+        Log::error('Job application error: ' . $e->getMessage());
+        return redirect()->back()->with('error', 'An error occurred while submitting your application.');
     }
-
 }
-
+}
