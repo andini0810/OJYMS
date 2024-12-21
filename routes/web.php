@@ -60,6 +60,7 @@ Route::middleware(['auth', CheckUserStatus::class])->group(function () {
     Route::get('/jobscreate', [FindjobsController::class, 'createJobs'])->name('jobscreate');
     Route::post('/jobsapply', [FindjobsController::class, 'applyJob'])->name('jobs.apply'); // Tambahkan ini
     Route::post('/findjobs', [FindjobsController::class, 'storeJob'])->name('jobs.store');
+    Route::get('/alumni/applications', [FindjobsController::class, 'showApplications'])->name('alumni.applications');
     Route::get('/events', [EventsController::class, 'showEvents'])->name('events');
     Route::get('/eventcreate', [EventsController::class, 'createEvent'])->name('eventcreate');
     Route::post('/events', [EventsController::class, 'storeEvent'])->name('events.store');

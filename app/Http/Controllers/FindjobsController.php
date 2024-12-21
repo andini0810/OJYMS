@@ -59,55 +59,76 @@ class FindjobsController extends Controller
 
 
     public function applyJob(Request $request)
-{
-    try {
-        $request->validate([
-            'jobsapply_id' => 'required|exists:jobs_creates,id',
-            'full_name' => 'required|string|max:255',
-            'email' => 'required|email',
-            'cv_file' => 'required|file|mimes:pdf|max:2048',
-        ]);
-
-        if ($request->hasFile('cv_file')) {
-            $file = $request->file('cv_file');
-            
-            // Check if file is valid
-            if (!$file->isValid()) {
-                Log::error('Invalid file upload attempt');
-                return redirect()->back()->with('error', 'Invalid file upload.');
-            }
-
-            $fileName = time() . '_' . $file->getClientOriginalName();
-            
-            // Store file and get path
-            $filePath = $file->storeAs('cv_files', $fileName, 'public');
-            
-            if (!$filePath) {
-                Log::error('File storage failed');
-                return redirect()->back()->with('error', 'Failed to store file.');
-            }
-
-            // Create database record
-            $jobApplication = JobsApply::create([
-                'jobsapply_id' => $request->jobsapply_id,
-                'full_name' => $request->full_name,
-                'email' => $request->email,
-                'cv_link' => $filePath,
+    {
+        try {
+            $request->validate([
+                'jobsapply_id' => 'required|exists:jobs_creates,id',
+                'full_name' => 'required|string|max:255',
+                'email' => 'required|email',
+                'cv_file' => 'required|file|mimes:pdf|max:2048',
             ]);
 
-            if (!$jobApplication) {
-                Log::error('Failed to create database record');
-                return redirect()->back()->with('error', 'Failed to save application.');
+            if ($request->hasFile('cv_file')) {
+                $file = $request->file('cv_file');
+
+                // Check if file is valid
+                if (!$file->isValid()) {
+                    Log::error('Invalid file upload attempt');
+                    return redirect()->back()->with('error', 'Invalid file upload.');
+                }
+
+                $fileName = time() . '_' . $file->getClientOriginalName();
+
+                // Store file and get path
+                $filePath = $file->storeAs('cv_files', $fileName, 'public');
+
+                if (!$filePath) {
+                    Log::error('File storage failed');
+                    return redirect()->back()->with('error', 'Failed to store file.');
+                }
+
+                // Create database record
+                $jobApplication = JobsApply::create([
+                    'jobsapply_id' => $request->jobsapply_id,
+                    'full_name' => $request->full_name,
+                    'email' => $request->email,
+                    'cv_link' => $filePath,
+                ]);
+
+                if (!$jobApplication) {
+                    Log::error('Failed to create database record');
+                    return redirect()->back()->with('error', 'Failed to save application.');
+                }
+
+                return redirect()->route('findjobs')->with('success', 'Application submitted successfully!');
             }
 
-            return redirect()->route('findjobs')->with('success', 'Application submitted successfully!');
+            return redirect()->back()->with('error', 'No file was uploaded.');
+        } catch (\Exception $e) {
+            Log::error('Job application error: ' . $e->getMessage());
+            return redirect()->back()->with('error', 'An error occurred while submitting your application.');
         }
-
-        return redirect()->back()->with('error', 'No file was uploaded.');
-
-    } catch (\Exception $e) {
-        Log::error('Job application error: ' . $e->getMessage());
-        return redirect()->back()->with('error', 'An error occurred while submitting your application.');
     }
+
+    public function showApplications()
+    {
+        // Get all applications with related job details
+        $applications = JobsApply::with('job')
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        return view('alumni.applications', compact('applications'));
+    }
+
+    public function viewCV($id)
+{
+    $application = JobsApply::findOrFail($id);
+    $filePath = storage_path('app/public/' . $application->cv_link);
+
+    if (file_exists($filePath)) {
+        return response()->file($filePath);
+    }
+
+    return abort(404, 'CV file not found');
 }
 }
