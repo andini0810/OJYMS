@@ -1,0 +1,97 @@
+/* Fullscreen Background Image */
+.background-image {
+    height: 100vh;
+    width: 100%;
+    background-image: url('https://images.pexels.com/photos/3184328/pexels-photo-3184328.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940');
+    background-size: cover;
+    background-position: center;
+    position: relative;
+}
+
+.overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.content {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    color: white;
+}
+
+.main-title {
+    font-size: 3rem;
+    font-weight: bold;
+    color: #fff;
+}
+
+.rotating-text-container {
+    font-size: 1.5rem;
+    color: #f3f4f6;
+}
+
+.rotating-text {
+    transition: opacity 0.5s ease-in-out;
+}
+
+.fade-in {
+    opacity: 1 !important;
+}
+
+.rotating-text {
+    opacity: 0;
+}
+
+.btn-group a {
+    display: inline-block;
+    margin: 10px;
+    padding: 12px 24px;
+    text-align: center;
+    text-decoration: none;
+    border-radius: 5px;
+    font-weight: bold;
+}
+
+.btn-primary {
+    background-color: #4f46e5;
+    color: white;
+}
+
+.btn-secondary {
+    background-color: #9ca3af;
+    color: white;
+}
+
+.feature-card {
+    text-align: center;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.feature-title {
+    font-size: 1.25rem;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.job-card {
+    text-align: center;
+    background-color: #f9fafb;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.section__title {
+    font-size: 2rem;
+    color: #2d3748;
+}
