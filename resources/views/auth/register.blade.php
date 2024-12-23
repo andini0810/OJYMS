@@ -26,6 +26,13 @@
       <form class="space-y-6" action="{{ route('register') }}" method="POST">
         @csrf
         <div>
+          <label for="name" class="block text-sm font-medium text-gray-900">User name</label>
+          <div class="mt-2">
+            <input type="name" name="name" id="name" autocomplete="name" required
+              class="block w-full rounded-md border border-gray-300 px-3 py-1.5 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-600 focus:border-indigo-600 sm:text-sm">
+          </div>
+        </div>
+        <div>
           <label for="email" class="block text-sm font-medium text-gray-900">Email address</label>
           <div class="mt-2">
             <input type="email" name="email" id="email" autocomplete="email" required

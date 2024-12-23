@@ -23,12 +23,14 @@ class RegisterController extends Controller
     {
          //dd($request->all());
         $request->validate([
+            'name' => 'required|string|max:20',
             'email' => 'required|email|unique:users',
             'password' => 'required|min:6',
         ]);
 
         // Simpan user ke database
         $user = User::create([
+            'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
             'role_id' => $request->role_id, // Ambil role_id dari input form

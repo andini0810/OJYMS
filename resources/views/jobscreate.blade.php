@@ -26,8 +26,24 @@
                         <th>Actions</th>
                     </tr>
                 </thead>
-                <tbody id="jobTableBody">
-                    <!-- Rows will be dynamically added here -->
+                <tbody>
+                    @foreach ($jobs_creates as $job)
+                        <tr>
+                            <td>{{ $job->title }}</td>
+                            <td>{{ $job->description }}</td>
+                            <td>{{ $job->company }}</td>
+                            <td>{{ $job->location }}</td>
+                            <td>{{ $job->posted_date->format('Y-m-d') }}</td>
+                            <td>
+                                <a href="{{ route('editjob', $job->id) }}" class="edit-btn">Edit</a>
+                                <form action="{{ route('deletejob', $job->id) }}" method="POST" style="display:inline;">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="delete-btn" onclick="return confirm('Are you sure?')">Delete</button>
+                                </form>
+                            </td>
+                        </tr>
+                    @endforeach
                 </tbody>
             </table>
             <button class="add-job-btn" onclick="openPopup()">Add Job</button>

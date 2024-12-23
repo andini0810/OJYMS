@@ -10,6 +10,7 @@ class JobsApply extends Model
     use HasFactory;
 
     protected $fillable = [
+        'user_id',
         'jobsapply_id',
         'full_name',
         'email',

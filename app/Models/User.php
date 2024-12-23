@@ -86,4 +86,14 @@ class User extends Authenticatable
     {
         return $query->where('status', 'active');
     }
+
+    public function jobApplications()
+    {
+        return $this->hasMany(JobsApply::class);
+    }
+
+    public function jobsCreated()
+    {
+        return $this->hasMany(JobsCreate::class);
+    }
 }

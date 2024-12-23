@@ -44,7 +44,7 @@ Route::middleware(['web'])->group(function () {
 
 Route::middleware(['auth', 'admin'])->group(function () {
     Route::get('/admin/dashboard', [DashboardUserController::class, 'dashboard'])->name('admin.dashboard'); // Menampilkan dashboard (termasuk daftar pengguna)
-    
+
     Route::get('/admin/users/{id}/edit', [DashboardUserController::class, 'edit'])->name('admin.users.edit'); // Endpoint untuk mendapatkan data user (AJAX)
     Route::put('/admin/users/{id}', [DashboardUserController::class, 'update'])->name('admin.users.update'); // Endpoint untuk menyimpan data edit
     Route::delete('/admin/users/{id}', [DashboardUserController::class, 'destroy'])->name('admin.users.destroy'); // Endpoint untuk menghapus user
@@ -60,7 +60,9 @@ Route::middleware(['auth', CheckUserStatus::class])->group(function () {
     Route::get('/jobscreate', [FindjobsController::class, 'createJobs'])->name('jobscreate');
     Route::post('/jobsapply', [FindjobsController::class, 'applyJob'])->name('jobs.apply'); // Tambahkan ini
     Route::post('/findjobs', [FindjobsController::class, 'storeJob'])->name('jobs.store');
-    Route::get('/alumni/applications', [FindjobsController::class, 'showApplications'])->name('alumni.applications');
+    Route::get('/jobs/{id}/edit', [FindjobsController::class, 'editJob'])->name('editjob');
+    Route::put('/jobs/{id}', [FindjobsController::class, 'updateJob'])->name('updatejob');
+    Route::delete('/jobs/{id}', [FindjobsController::class, 'deleteJob'])->name('deletejob');    Route::get('/alumni/applications', [FindjobsController::class, 'showApplications'])->name('alumni.applications');
     Route::get('/events', [EventsController::class, 'showEvents'])->name('events');
     Route::get('/eventcreate', [EventsController::class, 'createEvent'])->name('eventcreate');
     Route::post('/events', [EventsController::class, 'storeEvent'])->name('events.store');
@@ -81,14 +83,12 @@ Route::middleware(['auth'])->group(function () {
     Route::delete('/userprofile', [UserprofileController::class, 'destroy'])->name('userprofile.destroy');
     Route::get('/skills/{parentId}/children', [SkillController::class, 'getChildren']);
     Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
-
 });
 
 Route::get('/test', [UserController::class, 'test']);
 
-Route::get('/test-storage', function() {
+Route::get('/test-storage', function () {
     $path = storage_path('app/public/test.txt');
     File::put($path, 'Hello World');
     return 'File uji dibuat. Cek di: ' . asset('storage/test.txt');
 });
-

@@ -7,6 +7,8 @@ use App\Models\JobsCreate;
 use App\Models\JobsApply;
 use App\Models\User;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Auth;
 
 
 
@@ -14,22 +16,24 @@ class FindjobsController extends Controller
 {
     public function showFindjobs()
     {
-        $jobs_creates = JobsCreate::orderBy('posted_date', 'desc')->get();
+        $jobs_creates = JobsCreate::with('user')->orderBy('posted_date', 'desc')->get();
 
         return view('findjobs', compact('jobs_creates'));
     }
 
-    public function showJobs()
-    {
-        // Ambil jobs yang dibuat oleh user yang sedang login
-        $jobs_creates = JobsCreate::where('user_id', auth()->id())->get();
+    // public function showJobs()
+    // {
+    //     // Ambil jobs yang dibuat oleh user yang sedang login
 
-        return view('jobscreate', compact('jobs_creates'));
-    }
+
+    //     return view('jobscreate', compact('jobs_creates'));
+    // }
 
     public function createJobs()
     {
-        return view('jobscreate');
+
+        $jobs_creates = JobsCreate::all();
+        return view('jobscreate', compact('jobs_creates'));
     }
 
     // Store a new job
@@ -47,6 +51,7 @@ class FindjobsController extends Controller
         $posted_date = Carbon::parse($request->posted_date);
 
         JobsCreate::create([
+            'user_id' => Auth::id(),
             'title' => $request->input('title'),
             'description' => $request->input('description'),
             'company' => $request->input('company'),
@@ -55,6 +60,42 @@ class FindjobsController extends Controller
         ]);
 
         return redirect()->route('findjobs')->with('success', 'Job posted successfully!');
+    }
+
+    public function editJob($id)
+    {
+        $job = JobsCreate::where('id', $id)->where('user_id', auth()->id())->firstOrFail();
+        return view('editjob', compact('job'));
+    }
+
+    public function updateJob(Request $request, $id)
+    {
+        $request->validate([
+            'title' => 'required|string|max:255',
+            'description' => 'required|string',
+            'company' => 'required|string|max:255',
+            'location' => 'required|string|max:255',
+            'posted_date' => 'required|date',
+        ]);
+
+        $job = JobsCreate::where('id', $id)->where('user_id', auth()->id())->firstOrFail();
+        $job->update([
+            'title' => $request->input('title'),
+            'description' => $request->input('description'),
+            'company' => $request->input('company'),
+            'location' => $request->input('location'),
+            'posted_date' => Carbon::parse($request->input('posted_date')),
+        ]);
+
+        return redirect()->route('showJobs')->with('success', 'Job updated successfully!');
+    }
+
+    public function deleteJob($id)
+    {
+        $job = JobsCreate::where('id', $id)->where('user_id', auth()->id())->firstOrFail();
+        $job->delete();
+
+        return redirect()->route('showJobs')->with('success', 'Job deleted successfully!');
     }
 
 
@@ -89,6 +130,7 @@ class FindjobsController extends Controller
 
                 // Create database record
                 $jobApplication = JobsApply::create([
+                    'user_id' => Auth::id(),
                     'jobsapply_id' => $request->jobsapply_id,
                     'full_name' => $request->full_name,
                     'email' => $request->email,
@@ -121,14 +163,14 @@ class FindjobsController extends Controller
     }
 
     public function viewCV($id)
-{
-    $application = JobsApply::findOrFail($id);
-    $filePath = storage_path('app/public/' . $application->cv_link);
+    {
+        $application = JobsApply::findOrFail($id);
+        $filePath = storage_path('app/public/' . $application->cv_link);
 
-    if (file_exists($filePath)) {
-        return response()->file($filePath);
+        if (file_exists($filePath)) {
+            return response()->file($filePath);
+        }
+
+        return abort(404, 'CV file not found');
     }
-
-    return abort(404, 'CV file not found');
-}
 }
