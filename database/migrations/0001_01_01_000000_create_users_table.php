@@ -20,6 +20,7 @@ return new class extends Migration
             $table->foreignId('role_id')->constrained('roles')->onDelete('cascade');
             $table->rememberToken();
             $table->enum('status',['aktif', 'nonaktif', 'terblokir']);
+            $table->string('profile_photo')->nullable();
             $table->string('full_name')->nullable(); // Nullable
             $table->enum('location', [
             'aceh', 'sumatera utara', 'sumatera barat',

@@ -20,7 +20,7 @@ class JobsApply extends Model
     public function job()
     {
         return $this->belongsTo(JobsCreate::class, 'jobs_creates_id');
-        return $this->belongsTo(JobsCreate::class, 'jobsapply_id');
+        return $this->belongsTo(JobsCreate::class, 'jobsapply_id', 'id');
     }
 
     public function user()

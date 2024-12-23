@@ -23,7 +23,7 @@
 
                 <!-- Search Bar -->
                 <div class="search-bar">
-                    <form action="#" method="GET">
+                    <form action="{{ route('findjobs') }}" method="GET">
                         <input type="text" name="search" placeholder="Cari pekerjaan..." class="search-input">
                         <button type="submit" class="search-button">Cari</button>
                     </form>
@@ -51,15 +51,18 @@
                     @foreach ($jobs_creates as $job)
                         <div class="job-card">
                             <h3 class="job-card__title">{{ $job->title }}</h3>
-                            <p class="job-card__company">{{ $job->company }}</p>
-                            <p class="job-card__location">{{ $job->location }}</p>
-                            <p class="job-card__description">{{ Str::limit($job->description, 100) }}</p>
+                            <p class="job-card__description">Job Description: {{ $job->description }}</p>
+                            <p class="job-card__company">Company: {{ $job->company }}</p>
+                            <p class="job-card__location">Location: {{ $job->location }}</p>
+                            <p class="job-card__post-date">Post Date: {{ $job->created_at->format('d M Y') }}</p>
 
                             <button class="apply-button" data-id="{{ $job->id }}"
                                 onclick="openPopup('{{ $job->title }}', {{ $job->id }})">Apply</button>
                         </div>
                     @endforeach
                 </div>
+
+                <!-- Pagination section has been removed -->
             </div>
         </section>
 
@@ -74,6 +77,7 @@
                 {{ session('success') }}
             </div>
         @endif
+
         <!-- Pop-up Apply -->
         <div class="popup" id="applyPopup" style="display: none;">
             <div class="popup-content">
@@ -160,3 +164,4 @@
 
     </html>
 </x-layout>
+

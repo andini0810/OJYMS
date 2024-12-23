@@ -14,25 +14,35 @@ use Illuminate\Support\Facades\Auth;
 
 class FindjobsController extends Controller
 {
-    public function showFindjobs()
-    {
-        $jobs_creates = JobsCreate::with('user')->orderBy('posted_date', 'desc')->get();
+    public function showFindjobs(Request $request)
+{
+    // Ambil query pencarian dari parameter URL
+    $search = $request->input('search');
 
-        return view('findjobs', compact('jobs_creates'));
-    }
+    // Query untuk mengambil lowongan pekerjaan
+    $jobs_creates = JobsCreate::with('user')
+        ->when($search, function ($query, $search) {
+            $query->where('title', 'like', "%{$search}%")
+                  ->orWhere('company', 'like', "%{$search}%")
+                  ->orWhere('location', 'like', "%{$search}%");
+        })
+        ->orderBy('posted_date', 'desc')
+        ->get();
 
-    // public function showJobs()
+    return view('findjobs', compact('jobs_creates'));
+}
+
+    // public function showFindjobs()
     // {
-    //     // Ambil jobs yang dibuat oleh user yang sedang login
+    //     $jobs_creates = JobsCreate::with('user')->orderBy('posted_date', 'desc')->get();
 
-
-    //     return view('jobscreate', compact('jobs_creates'));
+    //     return view('findjobs', compact('jobs_creates'));
     // }
 
     public function createJobs()
     {
 
-        $jobs_creates = JobsCreate::all();
+        $jobs_creates = JobsCreate::where('user_id', Auth::id())->get();
         return view('jobscreate', compact('jobs_creates'));
     }
 
@@ -59,17 +69,31 @@ class FindjobsController extends Controller
             'posted_date' => $posted_date,
         ]);
 
-        return redirect()->route('findjobs')->with('success', 'Job posted successfully!');
+        return redirect()->route('findjobs');
     }
 
-    public function editJob($id)
+    public function edit($id)
     {
-        $job = JobsCreate::where('id', $id)->where('user_id', auth()->id())->firstOrFail();
-        return view('editjob', compact('job'));
+        // $jobs_creates = JobsCreate::findOrFail($id);
+
+        // // Pastikan hanya user yang membuat job ini yang bisa mengedit
+        // if ($jobs_creates->user_id !== Auth::id()) {
+        //     abort(403, 'Unauthorized action.');
+        // }
+
+        // return view('jobscreate', compact('jobs_creates'));
+        $jobs_creates = JobsCreate::where('user_id', Auth::id())->findOrFail($id);
+        return view('jobscreate', compact('jobs_creates'));
     }
 
-    public function updateJob(Request $request, $id)
+    public function update(Request $request, $id)
     {
+        $jobs_creates = JobsCreate::findOrFail($id);
+
+        if ($jobs_creates->user_id !== Auth::id()) {
+            abort(403, 'Unauthorized action.');
+        }
+
         $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'required|string',
@@ -78,24 +102,24 @@ class FindjobsController extends Controller
             'posted_date' => 'required|date',
         ]);
 
-        $job = JobsCreate::where('id', $id)->where('user_id', auth()->id())->firstOrFail();
-        $job->update([
-            'title' => $request->input('title'),
-            'description' => $request->input('description'),
-            'company' => $request->input('company'),
-            'location' => $request->input('location'),
-            'posted_date' => Carbon::parse($request->input('posted_date')),
-        ]);
+        $jobs_creates->update($request->only('title', 'description', 'company', 'location', 'posted_date'));
 
-        return redirect()->route('showJobs')->with('success', 'Job updated successfully!');
+        return redirect()->route('findjobs');
     }
 
     public function deleteJob($id)
     {
-        $job = JobsCreate::where('id', $id)->where('user_id', auth()->id())->firstOrFail();
-        $job->delete();
+        $jobs_creates = JobsCreate::where('user_id', Auth::id())->findOrFail($id);
 
-        return redirect()->route('showJobs')->with('success', 'Job deleted successfully!');
+        // Pastikan hanya user yang membuat job ini yang bisa menghapus
+        if ($jobs_creates->user_id !== Auth::id()) {
+            abort(403, 'Unauthorized action.');
+        }
+
+        // Hapus pekerjaan
+        $jobs_creates->delete();
+
+        return redirect()->route('findjobs');
     }
 
 

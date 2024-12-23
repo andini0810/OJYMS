@@ -1,132 +1,240 @@
 /* General Styling */
 body {
-    font-family: 'Arial', sans-serif;
-    margin: 0;
-    padding: 0;
-    background-color: #f9f9f9;
-    color: #333;
-  }
-  
-  .container {
-    max-width: 900px;
-    margin: 50px auto;
-    padding: 20px;
-    background: #fff;
-    border-radius: 8px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  }
-  
-  .title {
-    text-align: center;
-    margin-bottom: 20px;
-    font-size: 2rem;
-    color: #4a4a4a;
-  }
-  
-  .jobs-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-bottom: 20px;
-  }
-  
+  font-family: 'Arial', sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #f9f9f9;
+  color: #333;
+}
+
+/* Container Styling */
+.container {
+  max-width: 900px;
+  margin: 50px auto;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.title {
+  text-align: center;
+  margin-bottom: 20px;
+  font-size: 2rem;
+  color: #4a4a4a;
+}
+
+/* Responsive Table Styling */
+.table-responsive {
+  overflow-x: auto; /* Scroll horizontal jika tabel terlalu lebar */
+  -webkit-overflow-scrolling: touch; /* Memastikan scroll bekerja di perangkat sentuh */
+  padding: 5px;
+}
+
+.jobs-table {
+  width: 100%; /* Pastikan tabel menggunakan 100% lebar container */
+  border-collapse: collapse;
+  margin-bottom: 20px;
+  background-color: #fff; /* Latar belakang tabel */
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.jobs-table th, .jobs-table td {
+  text-align: left;
+  padding: 12px;
+  border-bottom: 1px solid #ddd;
+  white-space: nowrap; /* Mencegah teks memotong baris */
+  font-size: 0.9rem;
+}
+
+.jobs-table th {
+  background-color: #f4f4f4; /* Latar belakang header */
+  font-weight: bold;
+  color: #555;
+}
+
+.jobs-table td {
+  font-size: 0.85rem;
+  color: #333;
+}
+
+.jobs-table tr:hover {
+  background-color: #f2f2f2; /* Highlight baris saat hover */
+}
+
+/* Add Job Button */
+.add-job-btn {
+  background-color: #4caf50;
+  color: white;
+  display: block;
+  width: 100%;
+  max-width: 200px;
+  margin: 10px auto;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 4px;
+  font-size: 16px;
+  text-align: center;
+  cursor: pointer;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.add-job-btn:hover {
+  background-color: #45a049;
+}
+
+/* Action Buttons */
+.action-btn {
+  font-size: 12px;
+  padding: 6px 12px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  color: #fff;
+  transition: background-color 0.3s ease;
+}
+
+.edit-btn {
+  background-color: #007bff; /* Warna biru */
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  font-family: 'Poppins', sans-serif;
+  font-size: 14px;
+}
+
+.edit-btn:hover {
+  background-color: #0056b3; /* Warna biru gelap saat hover */
+  transform: scale(1.05); /* Sedikit memperbesar */
+}
+
+/* CSS untuk Tombol Delete */
+.delete-btn {
+  background-color: #dc3545; /* Warna merah */
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  font-family: 'Poppins', sans-serif;
+  font-size: 14px;
+}
+
+.delete-btn:hover {
+  background-color: #a71d2a; /* Warna merah gelap saat hover */
+  transform: scale(1.05); /* Sedikit memperbesar */
+}
+
+/* Tambahan untuk tombol Add Job */
+.add-job-btn {
+  background: linear-gradient(to right, #4f46e5, #6b63ff);
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  font-family: 'Poppins', sans-serif;
+  font-size: 16px;
+}
+
+.add-job-btn:hover {
+  background-color: #218838; /* Warna hijau gelap saat hover */
+  transform: scale(1.05); /* Sedikit memperbesar */
+}
+
+/* Pop-up Form Styling */
+.popup {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: none;
+  justify-content: center;
+  align-items: center;
+}
+
+.popup-content {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  width: 100%;
+  max-width: 400px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+}
+
+.popup-content label {
+  display: block;
+  margin-bottom: 5px;
+  font-size: 0.9rem;
+  color: #555;
+}
+
+.popup-content input {
+  width: 100%;
+  padding: 8px;
+  margin-bottom: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 0.85rem;
+}
+
+.popup-buttons {
+  display: flex;
+  justify-content: space-between;
+}
+
+.create-btn, .cancel-btn {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.3s ease;
+}
+
+.create-btn {
+  background-color: #4caf50;
+  color: white;
+}
+
+.create-btn:hover {
+  background-color: #45a049;
+}
+
+.cancel-btn {
+  background-color: #f44336;
+  color: white;
+}
+
+.cancel-btn:hover {
+  background-color: #d32f2f;
+}
+
+/* Media Queries for Small Screens */
+@media (max-width: 768px) {
   .jobs-table th, .jobs-table td {
-    text-align: left;
-    padding: 10px;
-    border-bottom: 1px solid #ddd;
+      font-size: 0.75rem;
+      padding: 8px;
   }
-  
-  .jobs-table th {
-    font-size: 0.9rem;
-    font-weight: bold;
-  }
-  
-  .jobs-table tr:hover {
-    background-color: #f9f9f9;
-  }
-  
+
   .add-job-btn {
-    background-color: #4caf50;
-    color: white;
-    display: block;
-    margin: 20px auto;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
+      font-size: 14px;
+      padding: 10px;
   }
-  
-  .add-job-btn:hover {
-    background-color: #45a049;
-  }
-  
-  /* Pop-up Form Styling */
-  .popup {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.5);
-    display: none;
-    justify-content: center;
-    align-items: center;
-  }
-  
+
   .popup-content {
-    background-color: #fff;
-    padding: 20px;
-    border-radius: 8px;
-    width: 400px;
-    position: relative;
-    text-align: center;
+      padding: 15px;
   }
-  
-  .popup-content h2 {
-    margin-bottom: 15px;
+
+  .action-btn {
+      font-size: 10px;
+      padding: 4px 8px;
   }
-  
-  .popup-content label {
-    display: block;
-    text-align: left;
-    margin-bottom: 5px;
-  }
-  
-  .popup-content input {
-    width: 100%;
-    padding: 8px;
-    margin-bottom: 10px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-  }
-  
-  .popup-buttons {
-    display: flex;
-    justify-content: space-between;
-  }
-  
-  .create-btn {
-    background-color: #4caf50;
-    color: white;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-  }
-  
-  .create-btn:hover {
-    background-color: #45a049;
-  }
-  
-  .cancel-btn {
-    background-color: #f44336;
-    color: white;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-  }
-  
-  .cancel-btn:hover {
-    background-color: #d32f2f;
-  }
-  
+}

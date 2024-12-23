@@ -6,6 +6,11 @@
     @vite('resources/css/app.css')
     <link rel="stylesheet" href="https://rsms.me/inter/inter.css">
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <style>
+      body, main, .navbar {
+          font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      }
+  </style>
     
 </head>
 <body>
@@ -28,6 +33,7 @@
     <div >
       {{ $slot }}
     </div>
+    <x-footer>{{ $slot }}</x-footer>
   </main>
 </div>
 

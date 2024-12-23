@@ -17,10 +17,13 @@
                 <!-- Header Section -->
                 <header class="header">
                     <h1>Upcoming Events</h1>
-                    <div class="search-bar">
-                        <input type="text" placeholder="Search events...">
-                        <button>search</button>
-                    </div>
+                    <!-- Search Bar -->
+                <div class="search-bar">
+                    <form action="{{ route('events') }}" method="GET">
+                        <input type="text" name="search" placeholder="Cari event..." class="search-input">
+                        <button type="submit" class="search-button">Cari</button>
+                    </form>
+                </div>
                 </header>
 
                 <!-- Events Section -->
@@ -55,12 +58,6 @@
             </x-dropdown>
         </div>
 
-        <!-- Footer -->
-        <footer class="footer">
-            <div class="container">
-                <p>&copy; 2024 Career Portal. All rights reserved.</p>
-            </div>
-        </footer>
 
         <script>
             // Select DOM Elements

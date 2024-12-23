@@ -58,11 +58,12 @@ Route::middleware(['auth', CheckUserStatus::class])->group(function () {
     Route::get('/home', [HomeController::class, 'showHome'])->name('home');
     Route::get('/findjobs', [FindjobsController::class, 'showFindjobs'])->name('findjobs');
     Route::get('/jobscreate', [FindjobsController::class, 'createJobs'])->name('jobscreate');
-    Route::post('/jobsapply', [FindjobsController::class, 'applyJob'])->name('jobs.apply'); // Tambahkan ini
     Route::post('/findjobs', [FindjobsController::class, 'storeJob'])->name('jobs.store');
-    Route::get('/jobs/{id}/edit', [FindjobsController::class, 'editJob'])->name('editjob');
-    Route::put('/jobs/{id}', [FindjobsController::class, 'updateJob'])->name('updatejob');
-    Route::delete('/jobs/{id}', [FindjobsController::class, 'deleteJob'])->name('deletejob');    Route::get('/alumni/applications', [FindjobsController::class, 'showApplications'])->name('alumni.applications');
+    Route::get('/jobs/{id}/edit', [FindjobsController::class, 'edit'])->name('editjob'); // Menggunakan 'edit'
+    Route::put('/jobs/{id}', [FindjobsController::class, 'update'])->name('updatejob'); // Menggunakan 'update'
+    Route::delete('/jobs/{id}', [FindjobsController::class, 'deleteJob'])->name('deletejob'); // Menggunakan 'deleteJob'
+    Route::post('/jobsapply', [FindjobsController::class, 'applyJob'])->name('jobs.apply');
+    Route::get('/alumni/applications', [FindjobsController::class, 'showApplications'])->name('alumni.applications');
     Route::get('/events', [EventsController::class, 'showEvents'])->name('events');
     Route::get('/eventcreate', [EventsController::class, 'createEvent'])->name('eventcreate');
     Route::post('/events', [EventsController::class, 'storeEvent'])->name('events.store');

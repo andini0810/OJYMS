@@ -7,6 +7,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 use App\Models\Role;
 use App\Models\Skill;
 
@@ -30,11 +31,10 @@ class RegisterController extends Controller
 
         // Simpan user ke database
         $user = User::create([
-            'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
             'role_id' => $request->role_id, // Ambil role_id dari input form
-            'name' => '', // Bisa ditambahkan input nama di form
+            'name' => $request->name, // Bisa ditambahkan input nama di form
             'status' => "nonaktif"
         ]);
         
@@ -68,20 +68,32 @@ class RegisterController extends Controller
 
     public function update(Request $request)
     {
-        // dd($request->all());
         $user = auth()->user();
 
-        // Validasi data form
         $request->validate([
+            'profile_photo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'full_name' => 'nullable|string|max:255',
+            'location' => 'nullable|string|max:255',
             'experience' => 'nullable|string|max:255',
             'company_name' => 'nullable|string|max:255',
             'company_location' => 'nullable|string|max:255',
             'job_title' => 'nullable|string|max:255',
+            'skill_id' => 'nullable|integer',
         ]);
 
-        // Update data user
+        if ($request->hasFile('profile_photo')) {
+            // Hapus file lama jika ada
+            if ($user->profile_photo && Storage::disk('public')->exists($user->profile_photo)) {
+                Storage::disk('public')->delete($user->profile_photo);
+            }
+        
+            // Simpan file baru
+            $path = $request->file('profile_photo')->store('profile_photos', 'public');
+            $user->profile_photo = $path;
+        }
+
         $user->update([
+            'profile_photo' => $user->profile_photo,
             'full_name' => $request->full_name,
             'location' => $request->location,
             'experience' => $request->experience,
@@ -90,8 +102,23 @@ class RegisterController extends Controller
             'job_title' => $request->job_title,
             'skill_id' => $request->skill_id,
             'status' => "aktif",
-        ]);  
+        ]);
 
-        return redirect()->route('home')->with('success', 'Data berhasil diperbarui.');
+        $user->save();
+
+        return redirect()->route('home')->with('success', 'Profile updated successfully.');
+    }
+
+    public function deletePhoto()
+    {
+        $user = auth()->user();
+
+        if ($user->profile_photo) {
+            Storage::disk('public')->delete($user->profile_photo);
+            $user->profile_photo = null;
+            $user->save();
+        }
+
+        return redirect()->back()->with('success', 'Profile photo deleted successfully.');
     }
 }

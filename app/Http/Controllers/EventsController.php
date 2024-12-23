@@ -10,10 +10,22 @@ use App\Models\User;
 class EventsController extends Controller
 {
     // Menampilkan semua event
-    public function showEvents()
+    public function showEvents(Request $request)
     {
-        $events = Event::orderBy('start_datetime', 'asc')->get(); // Mendapatkan semua data event
-        return view('events', compact('events')); // Mengirim data event ke view
+        // Ambil query pencarian dari parameter URL
+        $search = $request->input('search');
+
+        // Query untuk mendapatkan semua data event dengan filter pencarian
+        $events = Event::when($search, function ($query, $search) {
+            $query->where('name', 'like', "%{$search}%")
+                ->orWhere('description', 'like', "%{$search}%")
+                ->orWhere('location', 'like', "%{$search}%");
+        })
+            ->orderBy('start_datetime', 'asc')
+            ->get();
+
+        // Mengirim data event ke view
+        return view('events', compact('events'));
     }
 
     // Menampilkan form untuk membuat event baru

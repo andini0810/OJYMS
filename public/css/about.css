@@ -53,33 +53,38 @@ body {
 
 /* Fitur Utama */
 .key-features {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 20px;
+    display: flex; /* Membuat elemen anak di dalamnya berjejer */
+    gap: 20px; /* Memberikan jarak antar elemen */
+    justify-content: center; /* Memusatkan elemen secara horizontal */
+    margin-top: 40px; /* Jarak atas untuk memberikan ruang */
 }
+
 
 .feature {
-    background-color: rgba(255, 255, 255, 0.1); /* Transparan lembut */
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    border-radius: 10px;
-    padding: 20px;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    color: #e0e0e0;
+    background: white; /* Warna latar belakang kartu */
+    border-radius: 10px; /* Membuat sudut kartu melengkung */
+    padding: 20px; /* Ruang dalam kartu */
+    max-width: 250px; /* Lebar maksimum setiap kartu */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Efek bayangan */
+    text-align: center; /* Memusatkan teks dalam kartu */
+    transition: transform 0.3s ease, box-shadow 0.3s ease; /* Efek animasi */
 }
 
+
 .feature h3 {
-    font-size: 1.5rem;
-    font-weight: bold;
-    margin-bottom: 10px;
-    color: #fff;
+    font-size: 1.5rem; /* Ukuran teks judul */
+    color: #333; /* Warna teks judul */
 }
 
 .feature p {
-    font-size: 1rem;
-    color: #d1d5db;
+    font-size: 1rem; /* Ukuran teks deskripsi */
+    color: #555; /* Warna teks deskripsi */
 }
 
+
 .feature:hover {
-    transform: translateY(-10px);
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+    transform: scale(1.05) translateY(-5px); /* Membesarkan kartu dan mengangkatnya */
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3); /* Menambah bayangan saat hover */
 }
+
+

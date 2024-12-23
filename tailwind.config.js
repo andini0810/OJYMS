@@ -1,4 +1,4 @@
-/** @type {import('tailwindcss').Config} */
+import tailwindcss from 'tailwindcss';
 const defaultTheme = require('tailwindcss/defaultTheme')
 export default {
     content: [
