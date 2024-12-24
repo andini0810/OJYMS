@@ -2,6 +2,7 @@ import tailwindcss from 'tailwindcss';
 const defaultTheme = require('tailwindcss/defaultTheme')
 export default {
     content: [
+      "./**/*.php",
       "./resources/**/*.blade.php",
       "./resources/**/*.js",
       "./resources/**/*.vue",

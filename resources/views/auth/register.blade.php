@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="/output.css">
   <title>Sign In</title>
   <!-- Tambahkan CDN Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
