@@ -9,8 +9,7 @@
         <title>Portal Alumni & Karier</title>
         <!-- Tailwind CSS -->
         <link rel="stylesheet" href="/output.css">
-        <link rel="stylesheet" href="{{ asset('css/app.css') }}">
-        <link rel="stylesheet" href="css/overview.css">
+        <link rel="stylesheet" href="{{ asset('css/overview.css') }}">
     </head>
 
     <body class="relative">

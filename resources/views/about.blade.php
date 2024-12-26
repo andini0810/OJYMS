@@ -9,7 +9,7 @@
         <meta http-equiv="X-UA-Compatible" content="ie=edge">
         @vite('resources/css/app.css')
         <link rel="stylesheet" href="https://rsms.me/inter/inter.css">
-        <link rel="stylesheet" href="css/about.css">
+        <link rel="stylesheet" href="{{ asset('css/about.css') }}">
         <title>Document</title>
     </head>
 

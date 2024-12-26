@@ -6,7 +6,7 @@
         <title>Portal Alumni & Karier</title>
         <!-- Tailwind CSS -->
         <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-        <link rel="stylesheet" href="css/jobs.css">
+        <link rel="stylesheet" href="{{ asset('css/jobs.css') }}">
         </head>
 
     <body>
